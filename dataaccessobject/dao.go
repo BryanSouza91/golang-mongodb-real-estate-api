@@ -5,6 +5,7 @@ import (
 	"log"
 	"retrck/models"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -43,4 +44,13 @@ func (d *DAO) FindAll() (props []models.Property, err error) {
 		log.Fatal(err)
 	}
 	return props, err
+}
+
+// FindOne list of props
+func (d *DAO) FindOne(nickname string) (prop models.Property, err error) {
+	err = db.Collection(COLLECTION).FindOne(context.TODO(), bson.D{primitive.E{Key:"nickname", Value:nickname}}).Decode(&prop)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return prop, err
 }
