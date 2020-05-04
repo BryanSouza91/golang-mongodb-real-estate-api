@@ -3,17 +3,18 @@ package main
 import (
 	"encoding/json"
 	"log"
-	"regexp"
 	"net/http"
+	"regexp"
 
 	"retrck/config"
 	"retrck/dataaccessobject"
 )
 
+// Define Database Connection
 var conf = config.Config{}
 var dao = dataaccessobject.DAO{}
-var apn string
 
+// Find all documents
 func findAllHandler(w http.ResponseWriter, r *http.Request) {
 	props, err := dao.FindAll()
 	if err != nil {
@@ -23,6 +24,7 @@ func findAllHandler(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, props)
 }
 
+// Find by Nickname
 func findByNicknameHandler(w http.ResponseWriter, r *http.Request, nickname string) {
 	prop, err := dao.FindOne(nickname)
 	if err != nil {
@@ -32,11 +34,12 @@ func findByNicknameHandler(w http.ResponseWriter, r *http.Request, nickname stri
 	respondWithJSON(w, http.StatusOK, prop)
 }
 
-
+// Error Response func
 func respondWithError(w http.ResponseWriter, code int, msg string) {
 	respondWithJSON(w, code, map[string]string{"error": msg})
 }
 
+// Success Response func
 func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	response, _ := json.Marshal(payload)
 	w.Header().Set("Content-Type", "application/json")
@@ -44,8 +47,10 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	w.Write(response)
 }
 
+// Define possible paths/routes; Handle invalid path/route
 var validPath = regexp.MustCompile("^/(nickname|all)/([a-zA-Z0-9]+)$")
 
+// Function to route URL to correct function
 func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		m := validPath.FindStringSubmatch(r.URL.EscapedPath())
@@ -66,10 +71,9 @@ func init() {
 	dao.Connection()
 }
 
+// API routing
 func main() {
 	http.HandleFunc("/all", findAllHandler)
 	http.HandleFunc("/nickname/", makeHandler(findByNicknameHandler))
-
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
- 

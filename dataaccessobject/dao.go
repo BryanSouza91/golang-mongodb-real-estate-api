@@ -10,12 +10,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// DAO declaration
+// DAO type for bound functions
 type DAO struct {
 	Server   string
 	Database string
 }
 
+// Instantiate a Database object 
 var db *mongo.Database
 
 // COLLECTION declaration
@@ -23,7 +24,7 @@ const (
 	COLLECTION = "properties"
 )
 
-// Connection to the MongoDB
+// Connection to MongoDB
 func (d *DAO) Connection() {
 	clientOpts := options.Client().ApplyURI(d.Server)
 	client, err := mongo.Connect(context.TODO(), clientOpts)
