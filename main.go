@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -75,7 +74,7 @@ func init() {
 	configuration := Config{}
 	err := decoder.Decode(&configuration)
 	if err != nil {
-		fmt.Println("error:", err)
+		log.Fatal("error:", err)
 	}
 	dao.Server = configuration.Server
 	dao.Database = configuration.Database
