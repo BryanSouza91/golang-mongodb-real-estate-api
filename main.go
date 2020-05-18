@@ -2,15 +2,22 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
-	"retrck/config"
 	"retrck/dataaccessobject"
 )
 
-var conf = config.Config{}
-var dao = dataaccessobject.DAO{}
+var (
+	dao = dataaccessobject.DAO{}
+)
+
+type Config struct {
+	Server   string
+	Database string
+}
 
 func viewAllHandler(w http.ResponseWriter, r *http.Request) {
 	props, err := dao.FindAll()
@@ -20,7 +27,6 @@ func viewAllHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	respondWithJSON(w, http.StatusOK, props)
 }
-
 
 func respondWithError(w http.ResponseWriter, code int, msg string) {
 	respondWithJSON(w, code, map[string]string{"error": msg})
@@ -32,12 +38,19 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	w.WriteHeader(code)
 	w.Write(response)
 }
+
 // Parse the configuration file 'config.toml', and establish a connection to DB
 func init() {
-	conf.Read()
-
-	dao.Server = conf.Server
-	dao.Database = conf.Database
+	file, _ := os.Open("conf.json")
+	defer file.Close()
+	decoder := json.NewDecoder(file)
+	configuration := Config{}
+	err := decoder.Decode(&configuration)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+	dao.Server = configuration.Server
+	dao.Database = configuration.Database
 	dao.Connection()
 }
 
@@ -46,4 +59,3 @@ func main() {
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
- 
