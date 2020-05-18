@@ -44,7 +44,7 @@ type Value struct {
 // Mortgage type
 type Mortgage struct {
 	Bank          string  `bson:"bank,omitempty"`
-	// LoanNumber    int64     `bson:"loan_number,omitempty"`
+	// LoanNumber    int64   `bson:"loan_number,omitempty"`
 	MonthlyPmt    float64 `bson:"monthly_pmt,omitempty"`
 	Interest      float64 `bson:"interest,omitempty"`
 	MortgageTotal float64 `bson:"mortgage_total,omitempty"`
@@ -54,12 +54,12 @@ type Mortgage struct {
 
 // Insurance type
 type Insurance struct {
-	Company       string `bson:"insurance_comany,omitempty"`
-	PolicyNumber  string `bson:"policy_number,omitempty"`
+	Company       string  `bson:"insurance_comany,omitempty"`
+	PolicyNumber  string  `bson:"policy_number,omitempty"`
 	CoverageAmt   float64 `bson:"coverage_amt,omitempty"`
-	EffectiveDate string `bson:"effective_date,omitempty"`
+	EffectiveDate string  `bson:"effective_date,omitempty"`
 	Premium       float64 `bson:"monthly_pmt,omitempty"`
-	Notes         string `bson:"insurance_notes,omitempty"`
+	Notes         string  `bson:"insurance_notes,omitempty"`
 }
 
 // Lease type
@@ -97,18 +97,18 @@ type Property struct {
 	ID              primitive.ObjectID `bson:"_id,omitempty"`
 	Nickname        string             `bson:"nickname,omitempty"`
 	APN             string             `bson:"APN,omitempty"`
-	Address         Address            `bson:"address,omitempty"`
 	Type            string             `bson:"type,omitempty"`
+	Status          string             `bson:"status,omitempty"`
+	Impound         string             `bson:"impound,omitempty"`
 	Owner           string             `bson:"owned_by,omitempty"`
+	PropertyManager string             `bson:"property_manager,omitempty"`
+	Address         Address            `bson:"address,omitempty"`
 	PropertyInfo    PropertyInfo       `bson:"property_info,omitempty"`
-	Value           Value              `bson:"value,omitempty"`
 	Mortgage        Mortgage           `bson:"mortage,omitempty"`
 	Insurance       Insurance          `bson:"insurance,omitempty"`
-	Impound         string             `bson:"impound,omitempty"`
-	Status          string             `bson:"status,omitempty"`
+	Value           Value              `bson:"value,omitempty"`
 	Lease           Lease              `bson:"lease,omitempty"`
 	// Expenses        Expenses           `bson:"expenses,omitempty"`
-	PropertyManager string             `bson:"property_manager,omitempty"`
-	CustomFields    CustomFields       `bson:"custom_fields,omitempty"`
-	Notes           string             `bson:"notes,omitempty"`
+	CustomFields CustomFields `bson:"custom_fields,omitempty"`
+	Notes        string       `bson:"notes,omitempty"`
 }
