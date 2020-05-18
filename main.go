@@ -13,6 +13,8 @@ import (
 
 var (
 	dao = dataaccessobject.DAO{}
+	// Define possible paths/routes; Handle invalid path/route
+ 	validPath = regexp.MustCompile("^/(nickname|all)/([a-zA-Z0-9]+)$")
 )
 
 type Config struct {
@@ -52,9 +54,6 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	w.WriteHeader(code)
 	w.Write(response)
 }
-
-// Define possible paths/routes; Handle invalid path/route
-var validPath = regexp.MustCompile("^/(nickname|all)/([a-zA-Z0-9]+)$")
 
 // Function to route URL to correct function
 func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
