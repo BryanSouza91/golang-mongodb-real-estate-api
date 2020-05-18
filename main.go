@@ -5,20 +5,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-<<<<<<< HEAD
-	"regexp"
-=======
 	"os"
->>>>>>> master
+	"regexp"
 
 	"retrck/dataaccessobject"
 )
 
-<<<<<<< HEAD
-// Define Database Connection
-var conf = config.Config{}
-var dao = dataaccessobject.DAO{}
-=======
 var (
 	dao = dataaccessobject.DAO{}
 )
@@ -27,7 +19,6 @@ type Config struct {
 	Server   string
 	Database string
 }
->>>>>>> master
 
 // Find all documents
 func findAllHandler(w http.ResponseWriter, r *http.Request) {
@@ -39,7 +30,6 @@ func findAllHandler(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, props)
 }
 
-<<<<<<< HEAD
 // Find by Nickname
 func findByNicknameHandler(w http.ResponseWriter, r *http.Request, nickname string) {
 	prop, err := dao.FindOne(nickname)
@@ -51,8 +41,6 @@ func findByNicknameHandler(w http.ResponseWriter, r *http.Request, nickname stri
 }
 
 // Error Response func
-=======
->>>>>>> master
 func respondWithError(w http.ResponseWriter, code int, msg string) {
 	respondWithJSON(w, code, map[string]string{"error": msg})
 }
@@ -65,7 +53,6 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	w.Write(response)
 }
 
-<<<<<<< HEAD
 // Define possible paths/routes; Handle invalid path/route
 var validPath = regexp.MustCompile("^/(nickname|all)/([a-zA-Z0-9]+)$")
 
@@ -81,8 +68,6 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
 	}
 }
 
-=======
->>>>>>> master
 // Parse the configuration file 'config.toml', and establish a connection to DB
 func init() {
 	file, _ := os.Open("conf.json")
