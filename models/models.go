@@ -44,7 +44,7 @@ type Value struct {
 // Mortgage type
 type Mortgage struct {
 	Bank          string  `bson:"bank,omitempty"`
-	// LoanNumber    int64   `bson:"loan_number,omitempty"`
+	LoanNumber    int64   `bson:"loan_number,omitempty"`
 	MonthlyPmt    float64 `bson:"monthly_pmt,omitempty"`
 	Interest      float64 `bson:"interest,omitempty"`
 	MortgageTotal float64 `bson:"mortgage_total,omitempty"`
@@ -108,7 +108,7 @@ type Property struct {
 	Insurance       Insurance          `bson:"insurance,omitempty"`
 	Value           Value              `bson:"value,omitempty"`
 	Lease           Lease              `bson:"lease,omitempty"`
-	// Expenses        Expenses           `bson:"expenses,omitempty"`
-	CustomFields CustomFields `bson:"custom_fields,omitempty"`
-	Notes        string       `bson:"notes,omitempty"`
+	Expenses        Expenses           `bson:"expenses,omitempty"`
+	CustomFields    CustomFields       `bson:"custom_fields,omitempty"`
+	Notes           string             `bson:"notes,omitempty"`
 }

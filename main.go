@@ -7,19 +7,14 @@ import (
 	"os"
 	"regexp"
 
-	"retrck/dataaccessobject"
+	"github.com/BryanSouza91/real-estate-api/dataaccessobject"
 )
 
 var (
 	dao = dataaccessobject.DAO{}
 	// Define possible paths/routes; Handle invalid path/route
- 	validPath = regexp.MustCompile("^/(nickname|all)/([a-zA-Z0-9]+)$")
+	validPath = regexp.MustCompile("^/(nickname|all)/([a-zA-Z0-9]+)$")
 )
-
-type Config struct {
-	Server   string
-	Database string
-}
 
 // Find all documents
 func findAllHandler(w http.ResponseWriter, r *http.Request) {
@@ -37,6 +32,7 @@ func findByNicknameHandler(w http.ResponseWriter, r *http.Request, nickname stri
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		log.Fatal(err)
+		return
 	}
 	respondWithJSON(w, http.StatusOK, prop)
 }
@@ -66,18 +62,19 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
 	}
 }
 
-// Parse the configuration file 'config.toml', and establish a connection to DB
+// Parse the configuration file 'conf.json', and establish a connection to DB
 func init() {
-	file, _ := os.Open("conf.json")
-	defer file.Close()
-	decoder := json.NewDecoder(file)
-	configuration := Config{}
-	err := decoder.Decode(&configuration)
+	file, err := os.Open("conf.json")
 	if err != nil {
 		log.Fatal("error:", err)
 	}
-	dao.Server = configuration.Server
-	dao.Database = configuration.Database
+	defer file.Close()
+	decoder := json.NewDecoder(file)
+	err := decoder.Decode(&dao)
+	if err != nil {
+		log.Fatal("error:", err)
+	}
+
 	dao.Connection()
 }
 
@@ -85,5 +82,7 @@ func init() {
 func main() {
 	http.HandleFunc("/all", findAllHandler)
 	http.HandleFunc("/nickname/", makeHandler(findByNicknameHandler))
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	if err = http.ListenAndServe(":8080", nil) {
+		log.Fatal(err)
+	}
 }

@@ -1,4 +1,4 @@
-module retrck
+module real-estate-api
 
 go 1.14
 

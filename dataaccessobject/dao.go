@@ -3,7 +3,8 @@ package dataaccessobject
 import (
 	"context"
 	"log"
-	"retrck/models"
+
+	"github.com/BryanSouza91/real-estate-api/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -16,7 +17,7 @@ type DAO struct {
 	Database string
 }
 
-// Instantiate a Database object 
+// Instantiate a Database object
 var db *mongo.Database
 
 // COLLECTION declaration
@@ -34,7 +35,6 @@ func (d *DAO) Connection() {
 	db = client.Database(d.Database)
 }
 
-
 // FindAll list of props
 func (d *DAO) FindAll() (props []models.Property, err error) {
 	cursor, err := db.Collection(COLLECTION).Find(context.TODO(), bson.D{})
@@ -49,8 +49,12 @@ func (d *DAO) FindAll() (props []models.Property, err error) {
 
 // FindOne list of props
 func (d *DAO) FindOne(nickname string) (prop models.Property, err error) {
-	err = db.Collection(COLLECTION).FindOne(context.TODO(), bson.D{primitive.E{Key:"nickname", Value:nickname}}).Decode(&prop)
+	err = db.Collection(COLLECTION).FindOne(context.TODO(), bson.D{primitive.E{Key: "nickname", Value: nickname}}).Decode(&prop)
 	if err != nil {
+		// ErrNoDocuments means that the filter did not match any documents in the collection
+		if err == mongo.ErrNoDocuments {
+			return prop, err
+		}
 		log.Fatal(err)
 	}
 	return prop, err
